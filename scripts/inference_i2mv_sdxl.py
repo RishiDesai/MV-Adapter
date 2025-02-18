@@ -37,7 +37,21 @@ def prepare_pipeline(
 
     # Prepare pipeline
     pipe: MVAdapterI2MVSDXLPipeline
-    pipe = MVAdapterI2MVSDXLPipeline.from_pretrained(base_model, **pipe_kwargs)
+    if base_model == "RunDiffusion/Juggernaut-XL-v9":
+        from huggingface_hub import hf_hub_download
+        model_path = hf_hub_download(
+            repo_id="RunDiffusion/Juggernaut-XL-v9",
+            filename="Juggernaut-XL_v9_RunDiffusionPhoto_v2.safetensors",
+            cache_dir="/workspace/huggingface_cache"
+        )
+        pipe = MVAdapterI2MVSDXLPipeline.from_single_file(
+            model_path,
+            cache_dir="/workspace/huggingface_cache",
+            torch_dtype=torch.float16,
+            variant="fp16"
+        )
+    else:
+        pipe = MVAdapterI2MVSDXLPipeline.from_pretrained(base_model, **pipe_kwargs)
 
     # Load scheduler if provided
     scheduler_class = None
