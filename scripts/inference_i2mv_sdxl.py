@@ -27,13 +27,16 @@ def prepare_pipeline(
     num_views,
     device,
     dtype,
+    cache_dir=None,
 ):
     # Load vae and unet if provided
     pipe_kwargs = {}
     if vae_model is not None:
-        pipe_kwargs["vae"] = AutoencoderKL.from_pretrained(vae_model)
+        pipe_kwargs["vae"] = AutoencoderKL.from_pretrained(vae_model, cache_dir=cache_dir)
     if unet_model is not None:
-        pipe_kwargs["unet"] = UNet2DConditionModel.from_pretrained(unet_model)
+        pipe_kwargs["unet"] = UNet2DConditionModel.from_pretrained(unet_model, cache_dir=cache_dir)
+    if cache_dir is not None:
+        pipe_kwargs["cache_dir"] = cache_dir
 
     # Prepare pipeline
     pipe: MVAdapterI2MVSDXLPipeline
@@ -42,11 +45,11 @@ def prepare_pipeline(
         model_path = hf_hub_download(
             repo_id="RunDiffusion/Juggernaut-XL-v9",
             filename="Juggernaut-XL_v9_RunDiffusionPhoto_v2.safetensors",
-            cache_dir="/workspace/huggingface_cache"
+            cache_dir=cache_dir
         )
         pipe = MVAdapterI2MVSDXLPipeline.from_single_file(
             model_path,
-            cache_dir="/workspace/huggingface_cache",
+            cache_dir=cache_dir,
             torch_dtype=torch.float16,
             variant="fp16"
         )
@@ -244,6 +247,7 @@ if __name__ == "__main__":
         num_views=num_views,
         device=args.device,
         dtype=torch.float16,
+        cache_dir=None,
     )
 
     if args.remove_bg:
