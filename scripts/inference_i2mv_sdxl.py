@@ -40,16 +40,10 @@ def prepare_pipeline(
 
     # Prepare pipeline
     pipe: MVAdapterI2MVSDXLPipeline
-    if base_model == "RunDiffusion/Juggernaut-XL-v9":
-        from huggingface_hub import hf_hub_download
-        model_path = hf_hub_download(
-            repo_id="RunDiffusion/Juggernaut-XL-v9",
-            filename="Juggernaut-XL_v9_RunDiffusionPhoto_v2.safetensors",
-            cache_dir=cache_dir
-        )
+    if base_model == "juggernaut-xl":
+        model_path ="/workspace/ComfyUI/models/checkpoints/juggernaut-xl.safetensors"
         pipe = MVAdapterI2MVSDXLPipeline.from_single_file(
             model_path,
-            cache_dir=cache_dir,
             torch_dtype=torch.float16,
             variant="fp16"
         )
@@ -129,7 +123,6 @@ def preprocess_image(image: Image.Image, height, width):
     image = Image.fromarray(image)
 
     return image
-
 
 def run_pipeline(
     pipe,
