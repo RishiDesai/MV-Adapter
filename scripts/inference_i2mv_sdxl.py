@@ -40,7 +40,10 @@ def prepare_pipeline(
 
     # Prepare pipeline
     pipe: MVAdapterI2MVSDXLPipeline
-    pipe = MVAdapterI2MVSDXLPipeline.from_pretrained(base_model, **pipe_kwargs)
+    if base_model.endswith("juggernaut-xl.safetensors"):
+        pipe = MVAdapterI2MVSDXLPipeline.from_single_file(base_model, **pipe_kwargs)
+    else:
+        pipe = MVAdapterI2MVSDXLPipeline.from_pretrained(base_model, **pipe_kwargs)
 
     # Load scheduler if provided
     scheduler_class = None
