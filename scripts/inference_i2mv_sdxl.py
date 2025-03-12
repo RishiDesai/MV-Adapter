@@ -40,15 +40,7 @@ def prepare_pipeline(
 
     # Prepare pipeline
     pipe: MVAdapterI2MVSDXLPipeline
-    if base_model == "juggernaut-xl":
-        model_path ="/workspace/ComfyUI/models/checkpoints/juggernaut-xl.safetensors"
-        pipe = MVAdapterI2MVSDXLPipeline.from_single_file(
-            model_path,
-            torch_dtype=torch.float16,
-            variant="fp16"
-        )
-    else:
-        pipe = MVAdapterI2MVSDXLPipeline.from_pretrained(base_model, **pipe_kwargs)
+    pipe = MVAdapterI2MVSDXLPipeline.from_pretrained(base_model, **pipe_kwargs)
 
     # Load scheduler if provided
     scheduler_class = None
@@ -173,7 +165,7 @@ def run_pipeline(
         pipe_kwargs["generator"] = torch.Generator(device=device).manual_seed(seed)
 
     images = pipe(
-        text,
+        prompt=text,
         height=height,
         width=width,
         num_inference_steps=num_inference_steps,
