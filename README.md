@@ -1,6 +1,6 @@
 # MV-Adapter: Multi-view Consistent Image Generation Made Easy🚀
 
-## 🏠 <a href="https://huanngzh.github.io/MV-Adapter-Page/" target="_blank">Project Page</a> | <a href="https://arxiv.org/abs/2412.03632" target="_blank">Paper</a> | <a href="https://huggingface.co/huanngzh/mv-adapter" target="_blank">Model Weights</a> | [Demo](#model-zoo--demos) | <a href="https://github.com/huanngzh/ComfyUI-MVAdapter" target="_blank">ComfyUI</a>
+## 🏠 <a href="https://huanngzh.github.io/MV-Adapter-Page/" target="_blank">Project Page</a> | <a href="https://arxiv.org/abs/2412.03632" target="_blank">Paper</a> | <a href="https://huggingface.co/huanngzh/mv-adapter" target="_blank">Model Weights</a> | [Demo](https://huggingface.co/collections/huanngzh/mv-adapter-spaces-677e497578747fd734a1b999) | <a href="https://github.com/huanngzh/ComfyUI-MVAdapter" target="_blank">ComfyUI</a>
 
 ![teaser](assets/doc/teaser.jpg)
 
@@ -15,18 +15,34 @@ Highlight Features: Generate multi-view images
 
 ## 🔥 Updates
 
-* [2024-12] Release model weights, gradio demo, inference scripts and comfyui of text-/image- to multi-view generation models.
+* [2025-04-23] Release dataset ([Objaverse-Ortho10View](https://huggingface.co/datasets/huanngzh/Objaverse-Ortho10View) and [Objaverse-Rand6View](https://huggingface.co/datasets/huanngzh/Objaverse-Rand6View)) and training code. [See [guidelines](#️-training)]
+* [2025-03-31] Release text/image-conditioned 3D texture generation demos on [Text2Texture](https://huggingface.co/spaces/VAST-AI/MV-Adapter-Text2Texture) and [Image2Texture](https://huggingface.co/spaces/VAST-AI/MV-Adapter-Img2Texture). Feel free to try them!
+* [2025-03-17] Release model weights for partial-image conditioned geometry-to-multiview generation, which can be used to generate textured 3D scenes combined with [MIDI](https://github.com/VAST-AI-Research/MIDI-3D). [See [guidelines](#partial-image--geometry-to-multiview)]
+* [2025-03-07] Release model weights for geometry-guided multi-view generation. [See [guidelines](#text-geometry-to-multiview-generation)]
+* [2024-12-27] Release model weights, gradio demo, inference scripts and comfyui of text-/image- to multi-view generation models.
 
 ## TOC
 
-* [Model Zoo & Demos](#model-zoo--demos)
-* [Installation](#installation)
-* [Notes](#notes)
-* [Usage: Multi-view Generation](#usage-multiview-generation)
-  * Option1. [Launch Demo](#launch-demo)
-  * Option2. [Inference Scripts](#inference-scripts)
-  * Option3. [ComfyUI](#comfyui)
-* [Citation](#citation)
+- [MV-Adapter: Multi-view Consistent Image Generation Made Easy🚀](#mv-adapter-multi-view-consistent-image-generation-made-easy)
+  - [🏠 Project Page | Paper | Model Weights | Demo | ComfyUI](#-project-page--paper--model-weights--demo--comfyui)
+  - [🔥 Updates](#-updates)
+  - [TOC](#toc)
+  - [Model Zoo \& Demos](#model-zoo--demos)
+  - [Installation](#installation)
+  - [Notes](#notes)
+    - [System Requirements](#system-requirements)
+  - [Usage: Multiview Generation](#usage-multiview-generation)
+    - [Launch Demo](#launch-demo)
+      - [Text to Multiview Generation](#text-to-multiview-generation)
+      - [Image to Multiview Generation](#image-to-multiview-generation)
+    - [Inference Scripts](#inference-scripts)
+      - [Text to Multiview Generation](#text-to-multiview-generation-1)
+      - [Image to Multiview Generation](#image-to-multiview-generation-1)
+      - [Text-Geometry to Multiview Generation](#text-geometry-to-multiview-generation)
+      - [Image-Geometry to Multiview Generation](#image-geometry-to-multiview-generation)
+      - [Partial Image + Geometry to Multiview](#partial-image--geometry-to-multiview)
+    - [ComfyUI](#comfyui)
+  - [Citation](#citation)
 
 ## Model Zoo & Demos
 
@@ -34,15 +50,15 @@ No need to download manually. Running the scripts will download model weights au
 
 Notes: Running MV-Adapter for SDXL may need higher GPU memory and more time, but produce higher-quality and higher-resolution results. On the other hand, running its SD2.1 variant needs lower computing cost, but shows a bit lower performance.
 
-|            Model            | Base Model |                                                         HF Weights                                                         |                                                                   Demo Link                                                                   |
-| :-------------------------: | :--------: | :------------------------------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------------------------------------------------: |
-|      Text-to-Multiview      |   SD2.1    | [mvadapter_t2mv_sd21.safetensors](https://huggingface.co/huanngzh/mv-adapter/resolve/main/mvadapter_t2mv_sd21.safetensors) |                                                                                                                                               |
-|      Text-to-Multiview      |    SDXL    | [mvadapter_t2mv_sdxl.safetensors](https://huggingface.co/huanngzh/mv-adapter/resolve/main/mvadapter_t2mv_sdxl.safetensors) | [General](https://huggingface.co/spaces/VAST-AI/MV-Adapter-T2MV-SDXL) / [Anime](https://huggingface.co/spaces/huanngzh/MV-Adapter-T2MV-Anime) |
-|     Image-to-Multiview      |   SD2.1    | [mvadapter_i2mv_sd21.safetensors](https://huggingface.co/huanngzh/mv-adapter/resolve/main/mvadapter_i2mv_sd21.safetensors) |                                                                                                                                               |
-|     Image-to-Multiview      |    SDXL    | [mvadapter_i2mv_sdxl.safetensors](https://huggingface.co/huanngzh/mv-adapter/resolve/main/mvadapter_t2mv_sdxl.safetensors) |                                      [Demo](https://huggingface.co/spaces/VAST-AI/MV-Adapter-I2MV-SDXL)                                       |
-| Text-Geometry-to-Multiview  |    SDXL    |                                                                                                                            |                                                                                                                                               |
-| Image-Geometry-to-Multiview |    SDXL    |                                                                                                                            |                                                                                                                                               |
-|  Image-to-Arbitrary-Views   |    SDXL    |                                                                                                                            |                                                                                                                                               |
+|            Model            | Base Model |                                                                                                                                 HF Weights                                                                                                                                  |                                                                   Demo Link                                                                   |
+| :-------------------------: | :--------: | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------------------------------------------------: |
+|      Text-to-Multiview      |   SD2.1    |                                                                         [mvadapter_t2mv_sd21.safetensors](https://huggingface.co/huanngzh/mv-adapter/resolve/main/mvadapter_t2mv_sd21.safetensors)                                                                          |                                                                                                                                               |
+|      Text-to-Multiview      |    SDXL    |                                                                         [mvadapter_t2mv_sdxl.safetensors](https://huggingface.co/huanngzh/mv-adapter/resolve/main/mvadapter_t2mv_sdxl.safetensors)                                                                          | [General](https://huggingface.co/spaces/VAST-AI/MV-Adapter-T2MV-SDXL) / [Anime](https://huggingface.co/spaces/huanngzh/MV-Adapter-T2MV-Anime) |
+|     Image-to-Multiview      |   SD2.1    |                                                                         [mvadapter_i2mv_sd21.safetensors](https://huggingface.co/huanngzh/mv-adapter/resolve/main/mvadapter_i2mv_sd21.safetensors)                                                                          |                                                                                                                                               |
+|     Image-to-Multiview      |    SDXL    |                                                                         [mvadapter_i2mv_sdxl.safetensors](https://huggingface.co/huanngzh/mv-adapter/resolve/main/mvadapter_i2mv_sdxl.safetensors)                                                                          |                                      [Demo](https://huggingface.co/spaces/VAST-AI/MV-Adapter-I2MV-SDXL)                                       |
+| Text-Geometry-to-Multiview  |    SDXL    |                                                                        [mvadapter_tg2mv_sdxl.safetensors](https://huggingface.co/huanngzh/mv-adapter/resolve/main/mvadapter_tg2mv_sdxl.safetensors)                                                                         |                                     [Demo](https://huggingface.co/spaces/VAST-AI/MV-Adapter-Text2Texture)                                     |
+| Image-Geometry-to-Multiview |    SDXL    | [mvadapter_ig2mv_sdxl.safetensors](https://huggingface.co/huanngzh/mv-adapter/resolve/main/mvadapter_ig2mv_sdxl.safetensors) / [mvadapter_ig2mv_partial_sdxl.safetensors](https://huggingface.co/huanngzh/mv-adapter/resolve/main/mvadapter_ig2mv_partial_sdxl.safetensors) |                                     [Demo](https://huggingface.co/spaces/VAST-AI/MV-Adapter-Img2Texture)                                      |
+|  Image-to-Arbitrary-Views   |    SDXL    |                                                                                                                                                                                                                                                                             |                                                                                                                                               |
 
 ## Installation
 
@@ -254,6 +270,70 @@ python -m scripts.inference_i2mv_sd \
 --output output.png --remove_bg --scheduler ddpm
 ```
 
+#### Text-Geometry to Multiview Generation
+
+**Importantly**, when using geometry-condition generation, please make sure that the orientation of the mesh you provide is consistent with the following example. Otherwise, you need to adjust the angles in the scripts when rendering the view.
+
+**With SDXL:**
+
+```Bash
+python -m scripts.inference_tg2mv_sdxl \
+--mesh assets/demo/tg2mv/ac9d4e4f44f34775ad46878ba8fbfd86.glb \
+--text "Mater, a rusty and beat-up tow truck from the 2006 Disney/Pixar animated film 'Cars', with a rusty brown exterior, big blue eyes."
+```
+
+![tg2mv_example_out](assets/demo/tg2mv/ac9d4e4f44f34775ad46878ba8fbfd86_mv.png)
+
+```Bash
+python -m scripts.inference_tg2mv_sdxl \
+--mesh assets/demo/tg2mv/b5f0f0f33e3644d1ba73576ceb486d42.glb \
+--text "Optimus Prime, a character from Transformers, with blue, red and gray colors, and has a flame-like pattern on the body"
+```
+
+#### Image-Geometry to Multiview Generation
+
+**With SDXL:**
+
+```Bash
+python -m scripts.inference_ig2mv_sdxl \
+--image assets/demo/ig2mv/1ccd5c1563ea4f5fb8152eac59dabd5c.jpeg \
+--mesh assets/demo/ig2mv/1ccd5c1563ea4f5fb8152eac59dabd5c.glb \
+--output output.png --remove_bg
+```
+
+![example_ig2mv_out](assets/demo/ig2mv/1ccd5c1563ea4f5fb8152eac59dabd5c_mv.png)
+
+#### Partial Image + Geometry to Multiview
+
+**With SDXL:**
+
+```Bash
+python -m scripts.inference_ig2mv_partial_sdxl \
+--image assets/demo/ig2mv/cartoon_style_table.png \
+--mesh assets/demo/ig2mv/cartoon_style_table.glb \
+--output output.png
+```
+
+Example input:
+<img src="assets/demo/ig2mv/cartoon_style_table.png" alt="partial input" style="width: 20%">
+
+Example output:
+![example_partial_ig2mv](assets/demo/ig2mv/cartoon_style_table_mv.png)
+
+The above command will save a `*_transform.json` file in the output dir, which contains transformation information like this:
+```json
+{
+    "offset": [
+        0.7446051140100826,
+        -0.3421213991056582,
+        0.1360104325533671
+    ],
+    "scale": 1.0086087120792668
+}
+```
+
+You can use it to transform your mesh into the canonical space, map the generated multi-view images onto the mesh, and then re-transform the mesh back to the original spatial position.
+
 ### ComfyUI
 
 Please check <a href="https://github.com/huanngzh/ComfyUI-MVAdapter" target="_blank">ComfyUI-MVAdapter Repo</a> for details.
@@ -269,6 +349,74 @@ Please check <a href="https://github.com/huanngzh/ComfyUI-MVAdapter" target="_bl
 **Image to Multiview Generation**
 
 ![comfyui_i2mv](assets/doc/comfyui_i2mv.png)
+
+## 📊 Dataset
+
+Our training dataset, rendered from [Objaverse](https://huggingface.co/datasets/allenai/objaverse), can be downloaded from [Objaverse-Ortho10View](https://huggingface.co/datasets/huanngzh/Objaverse-Ortho10View) and [Objaverse-Rand6View](https://huggingface.co/datasets/huanngzh/Objaverse-Rand6View).
+
+* [Objaverse-Ortho10View](https://huggingface.co/datasets/huanngzh/Objaverse-Ortho10View) contains 10 orthographic views of 1024x1024 resolution, and is used as ground truth.
+* [Objaverse-Rand6View](https://huggingface.co/datasets/huanngzh/Objaverse-Rand6View) contains 6 randomly distributed views, and is used as reference image conditions.
+
+Please refer to their dataset cards to extract the data files, and organize them into the following structures:
+
+```Bash
+data
+├── texture_ortho10view_easylight_objaverse # Objaverse-Ortho10View
+│   ├── 00
+│   │   ├── 00a4d2b0c4c240289ed456e87d8b9e02
+│   ...
+├── texture_rand_easylight_objaverse # Objaverse-Rand6View
+│   ├── 00
+│   │   ├── 00a4d2b0c4c240289ed456e87d8b9e02
+│   ...
+├── objaverse_list_6w.json # objaverse ids
+└── objaverse_short_captions.json # id to captions
+```
+
+## 🏋️ Training
+
+The key training code can be found in `mvadapter/systems`:
+
+* `MVAdapterTextSDXLSystem` in `mvadapter_text_sdxl.py` is used for text or text+geometry conditioned multi-view generation.
+* `MVAdapterImageSDXLSystem` in `mvadapter_image_sdxl.py` is used for image or image+geometry conditioned multi-view generation.
+
+The specific training commands are as follows:
+
+For text to 6 view generation:
+
+```Bash
+python launch.py --config configs/view-guidance/mvadapter_t2mv_sdxl.yaml --train --gpu 0,1,2,3,4,5,6,7
+```
+
+For single image to 6 view generation:
+
+```Bash
+python launch.py --config configs/view-guidance/mvadapter_i2mv_sdxl.yaml --train --gpu 0,1,2,3,4,5,6,7
+```
+
+For single image to 2/3/4/6 view generation:
+
+```Bash
+python launch.py --config configs/view-guidance/mvadapter_i2mv_sdxl_aug_quantity.yaml --train --gpu 0,1,2,3,4,5,6,7
+```
+
+For text + geometry to 6 view generation:
+
+```Bash
+python launch.py --config configs/geometry-guidance/mvadapter_tg2mv_sdxl.yaml --train --gpu 0,1,2,3,4,5,6,7
+```
+
+For single image + geometry to 6 view generation:
+
+```Bash
+python launch.py --config configs/geometry-guidance/mvadapter_ig2mv_sdxl.yaml --train --gpu 0,1,2,3,4,5,6,7
+```
+
+For single partial image + geometry to 6 view generation (used for texture generation conditioned on occluded image, for example, used in [MIDI-3D](https://github.com/VAST-AI-Research/MIDI-3D)):
+
+```Bash
+python launch.py --config configs/geometry-guidance/mvadapter_ig2mv_partialimg_sdxl.yaml --train --gpu 0,1,2,3,4,5,6,7
+```
 
 ## Citation
 

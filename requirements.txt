@@ -3,7 +3,7 @@ diffusers==0.31.0
 transformers==4.46.3
 peft
 numpy==1.26.2
-huggingface_hub==0.24.6
+huggingface_hub==0.29.1
 accelerate==1.1.1
 opencv-python
 safetensors
@@ -11,7 +11,17 @@ pillow
 omegaconf
 trimesh
 einops
-gradio==4.44.1
+gradio
 timm
 kornia
 scikit-image
+sentencepiece
+git+https://github.com/NVlabs/nvdiffrast.git
+
+# new added for training
+pytorch-lightning
+
+# new added for texturing
+spandrel
+open3d
+pymeshlab
